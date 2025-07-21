@@ -1,0 +1,446 @@
+databaseChangeLog:
+  - changeSet:
+      id: initModels
+      author: Paul
+      changes:
+        #init roles
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: role_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+        #init users
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: corp_email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: phone_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: false
+              - column:
+                  name: personal_email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+                    unique: true
+              - column:
+                  name: is_enabled
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+        #init roles_users
+        - createTable:
+            tableName: roles_users
+            columns:
+              - column:
+                  name: fk_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: roles_users
+            baseColumnNames: fk_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_roles_users_id
+        - addForeignKeyConstraint:
+            baseTableName: roles_users
+            baseColumnNames: fk_role_id
+            referencedTableName: roles
+            referencedColumnNames: id
+            constraintName: fk_role_roles_users_id
+        - addPrimaryKey:
+            tableName: roles_users
+            columnNames: fk_role_id, fk_user_id
+            constraintName: pk_role_user
+        #init messages
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: varchar(1000)
+                  constraints:
+                    nullable: false
+        #init messages_users
+        - createTable:
+            tableName: messages_users
+            columns:
+              - column:
+                  name: fk_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_message_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: messages_users
+            baseColumnNames: fk_message_id
+            referencedTableName: messages
+            referencedColumnNames: id
+            constraintName: fk_message_messages_users_id
+        - addForeignKeyConstraint:
+            baseTableName: messages_users
+            baseColumnNames: fk_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_messages_user_id
+        - addPrimaryKey:
+            tableName: messages_users
+            columnNames: fk_message_id, fk_user_id
+            constraintName: pk_message_user
+        #init vehicles
+        - createTable:
+            tableName: vehicles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: is_company
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registration
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: brand
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: model
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: seats
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: co2_per_km
+                  type: SMALLINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: motor
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: fk_user_owner_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - addForeignKeyConstraint:
+                  baseTableName: vehicles
+                  baseColumnNames: fk_user_owner_id
+                  referencedTableName: users
+                  referencedColumnNames: id
+                  constraintName: fk_user_owner_id
+        #init reservations
+        - createTable:
+            tableName: reservations
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: departure_time
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: arrival_time
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_vehicle_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - addForeignKeyConstraint:
+                  baseTableName: reservations
+                  baseColumnNames: fk_vehicle_id
+                  referencedTableName: vehicles
+                  referencedColumnNames: id
+                  constraintName: fk_vehicle_id
+              - addForeignKeyConstraint:
+                  baseTableName: reservations
+                  baseColumnNames: fk_user_id
+                  referencedTableName: users
+                  referencedColumnNames: id
+                  constraintName: fk_user_id
+        #init carpools
+        - createTable:
+            tableName: carpools
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: creation_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: estimated_departure_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: departure_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: initial_available_seats
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estimated_arrival_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estimated_length
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: estimated_duration
+                  type: INTEGER
+                  constraints:
+                    nullable: true
+              - column:
+                  name: is_canceled
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_user_organizer_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_coordinates_start_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_coordinates_end_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_vehicle_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        #init users_carpools_participants
+        - createTable:
+            tableName: users_carpools_participants
+            columns:
+              - column:
+                  name: fk_user_participant_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fk_carpool_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: users_carpools_participants
+            baseColumnNames: fk_user_participant_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_participant_id
+        - addForeignKeyConstraint:
+            baseTableName: users_carpools_participants
+            baseColumnNames: fk_carpool_id
+            referencedTableName: carpools
+            referencedColumnNames: id
+            constraintName: fk_carpool_id
+        - addPrimaryKey:
+            tableName: users_carpools_participants
+            columnNames: fk_user_participant_id, fk_carpool_id
+            constraintName: pk_user_participant_carpool
+        #int coordinates
+        - createTable:
+            tableName: coordinates
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: address
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: street_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: house_number
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: long_coordinates
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lat_coordinates
+                  type: DOUBLE
+                  constraints:
+                    nullable: false
+        #add fk to carpools
+        - addForeignKeyConstraint:
+            baseTableName: carpools
+            baseColumnNames: fk_user_organizer_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_organizer_id
+        - addForeignKeyConstraint:
+            baseTableName: carpools
+            baseColumnNames: fk_coordinates_start_id
+            referencedTableName: coordinates
+            referencedColumnNames: id
+            constraintName: fk_coordinates_start_id
+        - addForeignKeyConstraint:
+            baseTableName: carpools
+            baseColumnNames: fk_coordinates_end_id
+            referencedTableName: coordinates
+            referencedColumnNames: id
+            constraintName: fk_coordinates_end_id
+        - addForeignKeyConstraint:
+            baseTableName: carpools
+            baseColumnNames: fk_vehicle_id
+            referencedTableName: vehicles
+            referencedColumnNames: id
+            constraintName: fk_vehicle_id

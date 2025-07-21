@@ -1,0 +1,48 @@
+<div class="container">
+  <form #carpoolForm="ngForm" (ngSubmit)="onSubmit()">
+    <app-coordinates-search (startCoordinatesSelectedEvent)="onStartCoordinatesSelected($event)"
+      (endCoordinatesSelectedEvent)="onEndCoordinatesSelected($event)">
+    </app-coordinates-search>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="exampleSelect1" class="form-label">Véhicule utilisé</label>
+        <select [disabled]="personalVehicles.length == 0 && isLoading == false" [(ngModel)]="selectedPersonalVehicleId"
+          (change)="onVehicleSelected()" class="form-select" id="exampleSelect1" name="exampleSelect1">
+          <option value="undefined" disabled hidden>Sélectionnez un véhicule</option>
+          <option *ngFor="let vehicle of personalVehicles" [value]="vehicle.id">
+            {{vehicle.registration}} - {{vehicle.model}} - Places : {{vehicle.seats}}
+          </option>
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label for="carpoolAvailableSeats" class="form-label">Nombre de places proposées</label>
+        <select id="carpoolAvailableSeats" name="carpoolAvailableSeats" class="form-select"
+          [(ngModel)]="selectedCarpoolAvailableSeats">
+          <option *ngFor="let n of selectedPersonalVehicleAvailableSeatsOptions" [ngValue]="n">{{ n }}</option>
+        </select>
+      </div>
+    </div>
+    <div *ngIf="personalVehicles.length == 0 && isLoading == false" class="alert alert-dismissible alert-warning">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong>Pas de véhicule personnel existant. Veuillez en déclarer un depuis "Mes véhicules"</strong>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="date" class="form-label">Date & Heure de départ</label>
+        <div class="row g-2">
+          <div class="col-md-5">
+            <input [(ngModel)]="date" type="date" class="form-control" id="date" name="date" required />
+          </div>
+          <div class="col-md-3">
+            <input [(ngModel)]="time" type="time" class="form-control text-center" id="time" name="time" required />
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="submit"
+      [disabled]="carpoolForm.invalid || selectedStartCoordinates == null || selectedEndCoordinates == null"
+      class="btn btn-primary">
+      Créer covoiturage
+    </button>
+  </form>
+</div>

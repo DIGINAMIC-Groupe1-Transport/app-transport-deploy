@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="pb-3">
+    <ul class="nav nav-underline">
+
+      <li class="nav-item">
+        <button class="nav-link" [ngClass]="{active: carpoolsMode === 'organize'}" style="color:black" (click)="changeCarpoolsMode('organize')">J'organise</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [ngClass]="{active: carpoolsMode === 'participate'}" style="color:black" (click)="changeCarpoolsMode('participate')">Je participe</button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [ngClass]="{active: carpoolsMode === 'vehicle'}" style="color:black" (click)="changeCarpoolsMode('vehicle')">Mes véhicules</button>
+      </li>
+    </ul>
+  </div>
+  <app-organize [hidden]="carpoolsMode !== 'organize'"></app-organize>
+  <app-participate [hidden]="carpoolsMode !== 'participate'"></app-participate>
+  <app-vehicle [hidden]="carpoolsMode !== 'vehicle'"></app-vehicle>
+</div>

@@ -1,0 +1,74 @@
+<!-- parent.component.html -->
+<div class="accordion pb-2 border-primary">
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#organizeCarpool"
+        aria-expanded="true" aria-controls="organizeCarpool">
+        Je déclare un véhicule </button>
+    </h2>
+    <div id="organizeCarpool" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+      data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <app-declare></app-declare>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="accordion pb-2 border-primary">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#organizedCarpools"
+        aria-expanded="true" aria-controls="organizedCarpools">
+        Mes véhicules</button>
+    </h2>
+    <div id="organizedCarpools" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+      data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="mat-elevation-z8">
+          <table class="table table-hover" mat-table [dataSource]="dataSource">
+
+            <ng-container matColumnDef="mmatriculation">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Immatriculation </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.registration}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="modele">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Modéle </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.model}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="marque">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Marque </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.brand}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="places">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Places </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.seats}} </td>
+            </ng-container>
+            <ng-container matColumnDef="co2Km">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> CO2/Km </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.co2PerKm}} </td>
+            </ng-container>
+            <ng-container matColumnDef="categorie">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Catégorie </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.vehicleCategory}} </td>
+            </ng-container>
+            <ng-container matColumnDef="motorisation">
+              <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Motorisation </th>
+              <td class="align-middle" mat-cell *matCellDef="let element"> {{element.vehicleMotor}} </td>
+            </ng-container>
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef> </th>
+              <td mat-cell *matCellDef="let element" class="d-flex justify-content-left gap-2">
+                <button type="button" (click)="onDelete(element.id)"class="btn btn-primary">Supprimer</button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

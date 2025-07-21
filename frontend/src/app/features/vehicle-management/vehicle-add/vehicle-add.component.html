@@ -1,0 +1,61 @@
+<div class="form-container">
+  <h2 class="main-title">Ajout d'un véhicule de service</h2>
+
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="immatriculation">Immatriculation :</label>
+      <input type="text" id="immatriculation" formControlName="immatriculation">
+    </div>
+    <div>
+      <label for="marque">Marque :</label>
+      <input type="text" id="marque" formControlName="marque">
+    </div>
+    <div>
+      <label for="modele">Modèle :</label>
+      <input type="text" id="modele" formControlName="modele">
+    </div>
+    <div>
+      <label for="categorie">Catégorie :</label>
+      <select id="categorie" formControlName="categorie">
+        <option>Micro-urbaines</option>
+        <option>Mini-citadines</option>
+        <option>Citadines polyvalentes</option>
+        <option>Compactes</option>
+        <option>Berlines Taille S</option>
+        <option>Berlines Taille M</option>
+        <option>Berlines Taille L</option>
+        <option>SUV, Tout-terrains et Pick-up</option>
+      </select>
+    </div>
+    <div>
+      <label for="photo">Photo (URL) :</label>
+      <input type="url" id="photo" formControlName="photo">
+    </div>
+    <div>
+      <label for="places">Nombre de places :</label>
+      <input type="number" id="places" formControlName="places" min="1">
+    </div>
+    <div>
+      <label for="motorisation">Motorisation :</label>
+      <input type="text" id="motorisation" formControlName="motorisation">
+    </div>
+    <div>
+      <label for="co2">CO2/km :</label>
+      <input type="number" id="co2" formControlName="co2" min="0">
+    </div>
+    <div>
+      <label for="statut">Statut :</label>
+      <select id="statut" formControlName="statut">
+        <option value="en_service">En service</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button class="btn" type="submit">Valider</button>
+      <button class="btn" type="button">Annuler</button>
+    </div>
+  </form>
+</div> 

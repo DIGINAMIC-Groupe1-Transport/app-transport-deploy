@@ -1,0 +1,58 @@
+<div class="container">
+    <form #vehicleForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="vehicleMotor" class="form-label">Type de moteur</label>
+                <select id="vehicleMotor" name="vehicleMotor" class="form-select" [(ngModel)]="selectedVehicleMotor">
+                    <option *ngFor="let n of vehicleMotors" [value]="n[0]">{{ n[1] }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="vehicleCategory" class="form-label">Catégorie de véhicule</label>
+                <select id="vehicleCategory" name="vehicleCategory" class="form-select"
+                    [(ngModel)]="selectedVehicleCategory">
+                    <option *ngFor="let n of vehicleCategorys" [value]="n[0]">{{ n[1] }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="vehicleRegistration" class="form-label">Immatriculation du
+                    véhicule</label>
+                <input [(ngModel)]="vehicleRegistration" type="text" class="form-control" name="vehicleRegistration"
+                    id="vehicleRegistration">
+            </div>
+            <div class="col-md-6">
+                <label for="vehicleModel" class="form-label">Modèle du véhicule</label>
+                <input [(ngModel)]="vehicleModel" type="text" class="form-control" name="vehicleModel"
+                    id="vehicleModel">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="vehicleBrand" class="form-label">Marque du véhicule</label>
+                <input [(ngModel)]="vehicleBrand" type="text" class="form-control" name="vehicleBrand"
+                    id="vehicleBrand">
+            </div>
+            <div class="col-md-6">
+                <label for="vehicleSeats" class="form-label">Nombre de places du
+                    véhicule</label>
+                <input [(ngModel)]="vehicleSeats" type="text" class="form-control" name="vehicleSeats"
+                    id="vehicleSeats">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="vehicleCO2" class="form-label">Consommation du véhicule en
+                    CO2/km</label>
+                <input [(ngModel)]="vehicleCO2" type="text" class="form-control" name="vehcicleCO2 " id="vehicleCO2">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Déclarer véhicule
+        </button>
+    </form>
+</div>

@@ -1,0 +1,45 @@
+.vehicle-reservation-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-card {
+  margin: 24px;
+  flex: 1;
+}
+
+mat-card-content {
+  padding: 16px;
+}
+
+.mat-elevation-z8 {
+  margin-top: 16px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-confirmée {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-en.attente {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.status-annulée {
+  background-color: #ffebee;
+  color: #c62828;
+}

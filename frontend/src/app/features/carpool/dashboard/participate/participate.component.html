@@ -1,0 +1,49 @@
+<div class="card border-primary mb-3">
+  <div class="card-header">Coviturages auxquels je participe</div>
+  <div class="card-body">
+    <div  *ngIf="participateCarpool.length > 0" class="mat-elevation-z8">
+      <table class="table table-hover" mat-table [dataSource]="dataSource" matSort>
+
+        <ng-container matColumnDef="startLabel">
+          <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Départ </th>
+          <td class="align-middle" mat-cell *matCellDef="let element"> {{element.startCoordinates.label}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="endLabel">
+          <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Arrivée </th>
+          <td class="align-middle" mat-cell *matCellDef="let element"> {{element.endCoordinates.label}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="estimatedDepartureTime">
+          <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Heure de départ </th>
+          <td class="align-middle" mat-cell *matCellDef="let element"> {{element.estimatedDepartureTime | date:'yyyy/MM/dd - HH:mm'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="estimatedArrivalTime">
+          <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Heure d'arrivée </th>
+          <td class="align-middle" mat-cell *matCellDef="let element"> {{element.estimatedArrivalTime | date:'yyyy/MM/dd - HH:mm'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="remainingSeat">
+          <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Places restantes </th>
+          <td class="align-middle" mat-cell *matCellDef="let element"> {{ element.remainingSeat }} </td>
+        </ng-container>
+        <ng-container matColumnDef="vehicleModel">
+          <th class="align-middle" mat-header-cell *matHeaderCellDef mat-sort-header> Véhicule </th>
+          <td class="align-middle" mat-cell *matCellDef="let element"> {{element.vehicle.brand}} </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> </th>
+          <td mat-cell *matCellDef="let element" class="d-flex justify-content-left gap-2">
+            <button type="button" (click)="openModalAsCancel(element.id)" class="btn btn-primary">Annuler</button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <mat-paginator [pageSize]="10" showFirstLastButtons [hidePageSize]="true">
+      </mat-paginator>
+    </div>
+  </div>
+</div>

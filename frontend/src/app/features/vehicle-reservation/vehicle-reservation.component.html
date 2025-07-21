@@ -1,0 +1,311 @@
+<!-- vehicle-reservation.component.html -->
+<div class="vehicle-reservation-container">
+  <!-- Header -->
+  <!-- <header class="app-header">
+    <div class="header-content">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <i class="icon-car"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Gestion des Transports</h1>
+          <p>Réservation de véhicules de service</p>
+        </div>
+      </div>
+      <div class="user-info">
+        <i class="icon-user"></i>
+        <span>Collaborateur</span>
+      </div>
+    </div>
+  </header> -->
+
+
+
+  <!-- Notifications -->
+  <div class="notification success" *ngIf="successMessage" [@slideIn]>
+    <i class="icon-check-circle"></i>
+    <span>{{ successMessage }}</span>
+  </div>
+
+  <div class="notification error" *ngIf="errorMessage" [@slideIn]>
+    <i class="icon-x-circle"></i>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <div class="main-content">
+    <!-- Navigation Tabs -->
+    <nav class="tab-navigation">
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'new'"
+        (click)="setActiveTab('new')">
+        Nouvelle réservation
+      </button>
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'current'"
+        (click)="setActiveTab('current')">
+        Réservations en cours ({{ currentReservations.length }})
+      </button>
+      <button 
+        class="tab-button"
+        [class.active]="activeTab === 'history'"
+        (click)="setActiveTab('history')">
+        Historique ({{ pastReservations.length }})
+      </button>
+    </nav>
+
+    <!-- New Reservation Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'new'">
+      <div class="reservation-grid">
+        <!-- Reservation Form -->
+        <div class="reservation-form-card">
+          <h2 class="form-title">
+            <i class="icon-calendar"></i>
+            Nouvelle réservation
+          </h2>
+          
+          <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <label for="vehicleId">Véhicule *</label>
+              <select id="vehicleId" formControlName="vehicleId" class="form-input">
+                <option value="" disabled selected>Choisissez un véhicule</option>
+                <option *ngFor="let v of vehicles" [value]="v.id">
+                  {{ v.brand }} {{ v.model }} ({{ v.registration }})
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="startDateTime">Date et heure de début *</label>
+              <input 
+                type="datetime-local"
+                id="startDateTime"
+                formControlName="startDateTime"
+                class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="endDateTime">Date et heure de fin *</label>
+              <input 
+                type="datetime-local"
+                id="endDateTime"
+                formControlName="endDateTime"
+                class="form-input">
+            </div>
+
+            <button 
+              type="submit"
+              class="submit-button"
+              [disabled]="!reservationForm.valid">
+              Confirmer la réservation
+            </button>
+          </form>
+        </div>
+
+        <!-- Vehicle Carousel -->
+        <div class="vehicle-carousel" *ngIf="selectedVehicle">
+          <div class="carousel-container">
+            <div class="vehicle-image">
+              <img 
+                [src]="selectedVehicle.urlImage" 
+                [alt]="selectedVehicle.brand + ' ' + selectedVehicle.model"
+                class="vehicle-photo">
+              <div class="image-overlay">
+                <div class="vehicle-title">
+                  <h3>{{ selectedVehicle.brand }} {{ selectedVehicle.model }}</h3>
+                  <p>{{ selectedVehicle.registration }}</p>
+                </div>
+              </div>
+              
+              <!-- Navigation Buttons -->
+              <button 
+                class="nav-button prev"
+                (click)="prevVehicle()"
+                *ngIf="vehicles.length > 1">
+                <i class="icon-chevron-left"></i>
+              </button>
+              <button 
+                class="nav-button next"
+                (click)="nextVehicle()"
+                *ngIf="vehicles.length > 1">
+                <i class="icon-chevron-right"></i>
+              </button>
+            </div>
+
+            <div class="vehicle-details">
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <span class="detail-label">Catégorie</span>
+                  <span class="detail-value">{{ selectedVehicle.vehicleCategory }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Places</span>
+                  <div class="detail-value">
+                    <i class="icon-users"></i>
+                    {{ selectedVehicle.seats }} personnes
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Motorisation</span>
+                  <div class="detail-value">
+                    <div [class]="getMotorIconClass(selectedVehicle.vehicleMotor || '')"></div>
+                    {{ selectedVehicle.vehicleMotor }}
+                  </div>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">CO2/km</span>
+                  <div class="detail-value">
+                    <div [class]="getCO2Class(selectedVehicle.co2PerKm || 0)"></div>
+                    {{ selectedVehicle.co2PerKm }} g
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Reservations Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'current'">
+      <div *ngIf="editMode; else reservationList">
+        <div class="reservation-form-card">
+          <h2 class="form-title">
+            <i class="icon-edit"></i>
+            Modifier la réservation
+          </h2>
+          <form [formGroup]="reservationForm" (ngSubmit)="onSubmitEdit()">
+            <div class="form-group">
+              <label for="vehicleId">Véhicule *</label>
+              <select id="vehicleId" formControlName="vehicleId" class="form-input">
+                <option value="" disabled>Choisissez un véhicule</option>
+                <option *ngFor="let v of vehicles" [value]="v.id">
+                  {{ v.brand }} {{ v.model }} ({{ v.registration }})
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="startDateTime">Date et heure de début *</label>
+              <input type="datetime-local" id="startDateTime" formControlName="startDateTime" class="form-input">
+            </div>
+            <div class="form-group">
+              <label for="endDateTime">Date et heure de fin *</label>
+              <input type="datetime-local" id="endDateTime" formControlName="endDateTime" class="form-input">
+            </div>
+            <div class="action-buttons">
+              <button type="submit" class="action-button modify" [disabled]="!reservationForm.valid">
+                Sauvegarder
+              </button>
+              <button type="button" class="action-button cancel" (click)="cancelEdit()">
+                Annuler
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <ng-template #reservationList>
+        <!-- ...tableau des réservations en cours... -->
+        <div class="reservations-card">
+          <div class="card-header">
+            <h2>
+              <i class="icon-clock"></i>
+              Réservations en cours
+            </h2>
+          </div>
+          <div class="empty-state" *ngIf="currentReservations.length === 0">
+            <i class="icon-car empty-icon"></i>
+            <p>Aucune réservation en cours</p>
+          </div>
+          <div class="tablreservationse" *ngIf="currentReservations.length > 0">
+            <table>
+              <thead>
+                <tr>
+                  <th>Véhicule</th>
+                  <th>Début</th>
+                  <th>Fin</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let reservation of currentReservations" class="reservation-row">
+                  <td>
+                    <div class="vehicle-info">
+                      <img [src]="reservation.vehicle?.urlImage || 'assets/img/carAccueil.png'" alt="" class="vehicle-thumbnail">
+                      <div class="vehicle-text">
+                        <div class="vehicle-name">
+                          {{ reservation.vehicle?.brand }} {{ reservation.vehicle?.model }}
+                        </div>
+                        <div class="vehicle-plate">{{ reservation.vehicle?.registration }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ formatDateTime(reservation.startDateTime.toString()) }}</td>
+                  <td>{{ formatDateTime(reservation.endDateTime.toString()) }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="action-button modify" (click)="openEditForm(reservation)">Modifier</button>
+                      <button class="action-button cancel" (click)="cancelReservation(reservation.id ?? 0)">
+                        Annuler
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- History Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'history'">
+      <div class="reservations-card">
+        <div class="card-header">
+          <h2>
+            <i class="icon-map-pin"></i>
+            Historique des réservations
+          </h2>
+        </div>
+        
+        <div class="empty-state" *ngIf="pastReservations.length === 0">
+          <i class="icon-clock empty-icon"></i>
+          <p>Aucune réservation dans l'historique</p>
+        </div>
+
+        <div class="tablreservationse" *ngIf="pastReservations.length > 0">
+          <table>
+            <thead>
+              <tr>
+                <th>Véhicule</th>
+                <th>Début</th>
+                <th>Fin</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reservation of pastReservations" class="reservation-row">
+                <td>
+                  <div class="vehicle-info">
+                    <img src="https://cdn-icons-png.flaticon.com/512/846/846338.png" alt="" class="vehicle-thumbnail">
+                    <div class="vehicle-text">
+                      <div class="vehicle-name">
+                        {{ reservation.vehicle?.brand }} {{ reservation.vehicle?.model?.toString() }}
+                      </div>
+                      <div class="vehicle-plate">{{ reservation.vehicle?.registration }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ formatDateTime(reservation.startDateTime.toString()) }}</td>
+                <td>{{ formatDateTime(reservation.endDateTime.toString()) }}</td>
+                <td>
+                  <span class="status-badge completed">Terminé</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

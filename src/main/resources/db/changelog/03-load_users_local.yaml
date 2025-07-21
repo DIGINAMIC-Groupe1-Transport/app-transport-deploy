@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: loadUsersLocal
+      author: Paul
+      contexts: "local"
+      changes:
+        - sql:
+            sql: |
+              -- USERS
+              INSERT INTO users (id, corp_email, phone_number, password, first_name, last_name, personal_email, is_enabled) VALUES
+              (1, 'alice.admin@corp.com', '0600000001', '$2y$10$4fSnXkbfFy1vKZCJtyNcZ.zAGCUC1xZ6D7taR1IgMdvwAeLSHAgOy', 'Alice', 'Admin', NULL, TRUE),
+              (2, 'bob.user@corp.com', '0600000002', '$2y$10$OORWukHpC2lpAcnQ1RiJBO116JOk70lSIYUirpUJXAegv96Is3sRW', 'Bob', 'User', NULL, TRUE),
+              (3, 'carol.both@corp.com', '0600000003', '$2y$10$PzfxQfHqqn6KbSVpAM9SIuzhdsCaLhug/rKdHoHKhWtqzSxXYVW2K', 'Carol', 'Both', NULL, TRUE);
+
+              -- ROLES_USERS (ADMIN = 1, USER = 2 supposés)
+              INSERT INTO roles_users (fk_user_id, fk_role_id) VALUES
+              (1, 1), -- Alice est ADMIN
+              (2, 2), -- Bob est USER
+              (3, 1), -- Carol est ADMIN
+              (3, 2); -- Carol est aussi USER
+
+              -- VEHICLES
+              INSERT INTO vehicles ( is_company, registration, brand, category, model, status, seats, co2_per_km, motor, fk_user_owner_id) VALUES
+              ( TRUE, 'AA-123-AA', 'Renault', 'CITADINE_POLYVALENTE', 'Clio', 'AVAILABLE', 5, 95, 'GASOLINE', 1),
+              (TRUE, 'BB-456-BB', 'Peugeot', 'CITADINE_POLYVALENTE', '208', 'AVAILABLE', 5, 90, 'HYBRID', 2);
+
+              -- RESERVATIONS
+              INSERT INTO reservations ( departure_time, arrival_time, status, fk_vehicle_id, fk_user_id) VALUES
+              ( '2024-07-01', '2024-07-01', 'ACTIVE', 1, 1),
+              ( '2024-07-02', '2024-07-02', 'COMPLETED', 2, 2);

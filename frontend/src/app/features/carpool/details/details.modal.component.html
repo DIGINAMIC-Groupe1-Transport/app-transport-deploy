@@ -1,0 +1,41 @@
+<div class="modal-container">
+  <div *ngIf="isLoading === true" class="loader-container">
+    <div class="loader"></div>
+  </div>
+  <div *ngIf="isLoading === false" class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <div [ngSwitch]="mode">
+          <div *ngSwitchCase="'delete'">Suppression du covoiturage</div>
+          <div *ngSwitchCase="'participate'">Participation au covoiturage</div>
+          <div *ngSwitchCase="'cancel'">Annulation du covoiturage</div>
+        </div>
+      </h5>
+    </div>
+    <div class="modal-body">
+      <div class="covoiturage-details">
+        <div *ngIf="mode !== 'delete'">
+          <p><strong>Organisateur : </strong> {{carpoolDetails.organizer?.firstName}} {{carpoolDetails.organizer?.lastName}} - {{carpoolDetails.organizer?.corpEmail}} </p>
+          <p><strong>Infos véhicule : </strong> {{carpoolDetails.vehicle?.model}} {{carpoolDetails.vehicle?.brand}} - {{carpoolDetails.vehicle?.model}} - {{carpoolDetails.vehicle?.model}} - {{carpoolDetails.vehicle?.model}}</p>
+        </div>
+        <p><strong>Départ : </strong> {{carpoolDetails.startCoordinates.label}} - {{
+          carpoolDetails.estimatedDepartureTime | date:'yyyy/MM/dd - HH:mm'}}</p>
+        <p><strong>Arrivée : </strong> {{carpoolDetails.startCoordinates.label}} - {{
+          carpoolDetails.estimatedArrivalTime | date:'yyyy/MM/dd - HH:mm'}}</p>
+        <div *ngIf="carpoolDetails.participants && carpoolDetails.participants.length > 0">
+          <h6>Participants :</h6>
+          <ul>
+            <li *ngFor="let participant of carpoolDetails.participants">
+              {{ participant.firstName }} ({{ participant.lastName }}) - {{participant.corpEmail}}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" (click)="actionIsConfirmed(true)" class="btn btn-primary"> Confirmer </button>
+      <button type="button" (click)="actionIsConfirmed(false)" class="btn btn-secondary"> Annuler </button>
+    </div>
+  </div>
+</div>

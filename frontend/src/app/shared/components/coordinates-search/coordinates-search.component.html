@@ -1,0 +1,33 @@
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label for="coordinatesStart" class="form-label">Adresse de départ</label>
+        <div class="position-relative">
+            <input type="text" class="form-control" name="coordinatesStart" [(ngModel)]="startCoordinatesSearchQuery"
+                (keyup)="onStartCoordinatesSearchQueryChange()" placeholder="Entrez une adresse..."
+                autocomplete="off" />
+            <ul class="list-group position-absolute w-100 z-3 mt-1" *ngIf="startCoordinatesSuggestions.length"
+                style="max-height: 200px; overflow-y: auto;">
+                <li class="list-group-item list-group-item-action"
+                    *ngFor="let suggestion of startCoordinatesSuggestions"
+                    (click)="selectStartCoordinatesSuggestions(suggestion)" style="cursor: pointer;">
+                    {{ suggestion.label }}
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="coordinatesEnd" class="form-label">Adresse d'arrivée</label>
+        <div class="position-relative">
+            <input type="text" class="form-control" name="coordinatesEnd" [(ngModel)]="endCoordinatesSearchQuery"
+                (keyup)="onEndCoordinatesSearchQueryChange()" placeholder="Entrez une adresse..." autocomplete="off" />
+            <ul class="list-group position-absolute w-100 z-3 mt-1" *ngIf="endCoordinatesSuggestions.length"
+                style="max-height: 200px; overflow-y: auto;">
+                <li class="list-group-item list-group-item-action" *ngFor="let suggestion of endCoordinatesSuggestions"
+                    (click)="selectEndCoordinatesSuggestions(suggestion)" style="cursor: pointer;">
+                    {{ suggestion.label }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

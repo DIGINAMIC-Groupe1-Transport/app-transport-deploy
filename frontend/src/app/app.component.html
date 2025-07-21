@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand bg-primary" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand pe-none">CorpCovoit</a>
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/covoiturages/recherche" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Recherche
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/covoiturages/tableau" routerLinkActive="active">Mes covoits</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/vehicules/reservation" routerLinkActive="active">
+            <i class="icon-car"></i> Mes réservations de véhicules
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="isAdmin">
+          <a class="nav-link" routerLink="/vehicules/gestion" routerLinkActive="active">
+            <i class="icon-cogs"></i> Gestion du parc véhicules
+          </a>
+        </li>
+      </ul>
+      <button class="btn btn-outline-light ms-auto" *ngIf="authService.isAuthenticated()" (click)="logout()">Se déconnecter</button>
+    </div>
+  </div>
+</nav>
+<main class="main-content">
+  <div class="container-fluid p-t-20 p-b-40">
+    <router-outlet></router-outlet>
+  </div>
+</main>

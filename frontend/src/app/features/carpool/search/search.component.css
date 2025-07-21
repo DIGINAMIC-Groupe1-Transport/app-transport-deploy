@@ -1,0 +1,19 @@
+.mat-table .mat-cell.align-middle,
+.mat-table .mat-header-cell.align-middle {
+    vertical-align: middle !important;
+    display: table-cell !important;
+}
+
+.mat-table .mat-cell,
+.mat-table .mat-header-cell {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    min-height: 48px !important;
+}
+
+.mat-sort-header-container {
+    justify-content: center !important;
+    align-items: center;
+}

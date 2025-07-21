@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/01-init_models.yaml
+  - include:
+      file: db/changelog/02-load_roles.yaml
+  - include:
+      file: db/changelog/03-load_users_local.yaml

@@ -1,0 +1,42 @@
+/* Corrige le dropdown de sélection de page */
+::ng-deep .mat-mdc-select {
+  min-width: 60px !important;
+  font-size: 14px !important;
+}
+
+::ng-deep .mat-mdc-select-value {
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+::ng-deep .mat-mdc-select-arrow {
+  color: #666 !important;
+}
+
+/* Corrige les options du dropdown */
+::ng-deep .mat-mdc-option {
+  font-size: 14px !important;
+  min-height: 40px !important;
+  padding: 8px 16px !important;
+  line-height: 24px !important;
+}
+
+::ng-deep .mat-mdc-option-text {
+  font-size: 14px !important;
+}
+
+/* Corrige l'overlay du dropdown */
+::ng-deep .mat-mdc-select-panel {
+  min-width: 60px !important;
+  max-width: 200px !important;
+}
+
+/* Corrige spécifiquement le paginator */
+::ng-deep .mat-mdc-paginator-page-size-select {
+  margin: 0 8px !important;
+}
+
+::ng-deep .mat-mdc-paginator-page-size-label {
+  margin-right: 8px !important;
+  font-size: 14px !important;
+}

@@ -1,0 +1,19 @@
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding: 1rem;
+}
+
+/* :host ::ng-deep .navbar-brand:hover, .navbar-brand:focus {
+  color: inherit !important;
+  text-decoration: none !important;
+} */
+.card-header {
+    padding-top: 0.5em !important; /* ou 4rem selon vos besoins */
+    padding-bottom: 0.5em !important; /* ou 4rem selon vos besoins */
+}

@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
 //                      .requestMatchers("/api/user/**").hasRole("ADMIN")
-                        .requestMatchers("/api/**", "/h2-console/**",  "/*.js",                        // JS à la racine (scripts.js, polyfills.js, etc.)
+                        .requestMatchers("/auth/login", "/h2-console/**",  "/*.js",                        // JS à la racine (scripts.js, polyfills.js, etc.)
                                 "/*.css",                       // idem pour CSS
                                 "/*.ico", "/*.webmanifest",    // favicon etc.
                                 "/*.json", "/transport-angular/browser/**", "/index.html", "/static/**", "/").permitAll()

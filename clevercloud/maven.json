@@ -1,9 +1,0 @@
-{
-  "build": {
-    "type": "maven",
-    "goal": "-Pprod clean compile"
-  },
-  "deploy": {
-    "goal": "-Pprod spring-boot:run"
-  }
-}

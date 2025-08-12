@@ -1,0 +1,118 @@
+name: CI/CD Back - Gestion des transports
+# Executé seulement lors des merge sur main, permet d'obtenir un rapport SonarCube
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  sonarqube:
+    name: Tests, JaCoCo, Build et analyse SonarCloud
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Installer jq                  # Package permettant de manipuler du JSON en shell
+        run: sudo apt-get install jq
+
+      - name: Checkout du code              # Récupération du code sur la VM
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configuration de JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Cache des dépendances Maven   # Mise en cache des dépendances Maven pour ne pas avoir à les télécharger à chaque fois
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Analyse SonarCloud avec tests et JaCoCo # SonarCloud exécute les tests ET génère le rapport JaCoCo
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }} # Correspond à un secret défini dans le repository Github
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_transport-back -Dsonar.organization=diginamic-groupe1-transport -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+
+
+      - name: Archivage du rapport JaCoCo   # On sauvegarde le rapport jaCoco généré par SonarCloud
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+
+      - name: Archivage des artefacts       # On sauvegarde aussi le JAR buildé
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
+
+      - name: Vérification du Quality Gate  # On vérifie que le rapport SonarQube généré ne contient pas d'erreurs, si oui, le job est mis en erreur.
+        env:
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PROJECT_KEY="DIGINAMIC-Groupe1-Transport_transport-back"
+
+          echo "🔍 Vérification du Quality Gate pour le projet: $PROJECT_KEY (PR #$PR_NUMBER)"
+      
+          # Attendre que l'analyse soit traitée
+          echo "⏳ Attente de 60 secondes pour le traitement de l'analyse..."
+          sleep 60
+      
+          # Tentatives multiples pour récupérer le statut
+          for attempt in {1..3}; do
+          echo "🔍 Tentative $attempt/3 - Récupération du statut du Quality Gate pour la PR..."
+      
+          response=$(curl -s -u $SONAR_TOKEN: \
+            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$PROJECT_KEY&pullRequest=$PR_NUMBER")
+      
+          echo "📊 Réponse de l'API SonarCloud:"
+          echo "$response" | jq '.'
+          
+          # Extraire le statut
+          status=$(echo "$response" | jq -r '.projectStatus.status')
+      
+          echo "📈 Statut du Quality Gate: $status"
+      
+          if [ "$status" != "NONE" ] && [ "$status" != "null" ] && [ -n "$status" ]; then
+          break
+          fi
+          
+          echo "⏳ Statut encore en attente, nouvelle tentative dans 30 secondes..."
+          sleep 30
+          done
+      
+          # Traitement du statut final
+          case "$status" in
+          "OK")
+          echo "✅ Quality Gate: OK"
+          exit 0
+          ;;
+          "ERROR")
+          echo "❌ Quality Gate: FAILED"
+          echo "📋 Détails des conditions:"
+          echo "$response" | jq '.projectStatus.conditions[] | select(.status == "ERROR")'
+          exit 1
+          ;;
+          "NONE")
+          echo "⚠️  Quality Gate: NONE - Pas de statut trouvé pour la PR"
+          exit 1
+          ;;
+          *)
+          echo "⚠️  Statut du Quality Gate inconnu: $status"
+          exit 1
+          ;;
+          esac

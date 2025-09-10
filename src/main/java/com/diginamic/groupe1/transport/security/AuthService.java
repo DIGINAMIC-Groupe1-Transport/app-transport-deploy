@@ -40,7 +40,7 @@ public class AuthService {
 
             return ResponseEntity.ok(jwt);
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe invalide");
         }
     }
 

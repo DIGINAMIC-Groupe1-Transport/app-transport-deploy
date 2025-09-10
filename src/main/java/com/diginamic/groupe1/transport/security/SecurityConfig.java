@@ -41,12 +41,15 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-//                      .requestMatchers("/api/user/**").hasRole("ADMIN")
-                        .requestMatchers("api/auth/login", "/h2-console/**",  "/*.js",                        // JS à la racine (scripts.js, polyfills.js, etc.)
-                                "/*.css",                       // idem pour CSS
-                                "/*.ico", "/*.webmanifest",    // favicon etc.
-                                "/*.json", "/transport-angular/browser/**", "/index.html", "/static/**", "/").permitAll()
-                        .anyRequest().authenticated()
+                        //auth, h2, static
+                        .requestMatchers("/api/auth/login", "/h2-console/**").permitAll()
+                        .requestMatchers("/transport-angular/**").permitAll()
+                        .requestMatchers("/", "/{path:^(?!api$).*$}/**").permitAll()
+                        //covoiturages
+                        .requestMatchers("/api/vehicles/personal/**").authenticated()
+                        .requestMatchers("/api/carpools/**").authenticated()
+                        //gestion parc
+                        .requestMatchers("/api/vehicles/service/**").hasRole("ADMIN")
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authenticationProvider(authenticationProvider());

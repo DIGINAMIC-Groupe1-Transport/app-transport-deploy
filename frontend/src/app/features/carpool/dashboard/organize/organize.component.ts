@@ -28,21 +28,23 @@ export class OrganizeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     organizedCarpools: CarpoolDTO[] = [];
 
-    dataSource = new MatTableDataSource<CarpoolDTO>([]);
-    displayedColumns: string[] = ['startLabel', 'endLabel', 'estimatedDepartureTime', 'estimatedArrivalTime', 'occupiedSeats', 'actions'];
+    dataSourceCurrent = new MatTableDataSource<CarpoolDTO>([]);
+    dataSourcePast = new MatTableDataSource<CarpoolDTO>([]);
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
+    displayedColumnsCurrent: string[] = ['startLabel', 'endLabel', 'estimatedDepartureTime', 'estimatedArrivalTime', 'occupiedSeats', 'actions'];
+    displayedColumnsPast: string[] = ['startLabel', 'endLabel', 'estimatedDepartureTime', 'estimatedArrivalTime', 'occupiedSeats'];
+
+    @ViewChild(MatPaginator) paginatorPast!: MatPaginator;
+    @ViewChild(MatSort) sortPast!: MatSort;
+
+    @ViewChild(MatPaginator) paginatorCurrent!: MatPaginator;
+    @ViewChild(MatSort) sortCurrent!: MatSort;
 
     constructor(
         private carpoolsService: CarpoolsService,
         private dialog: Dialog,
         private cdRef: ChangeDetectorRef
     ) { }
-
-    ngOnInit(): void {
-        this.loadData();
-    }
 
     private loadData(): void {
 
@@ -53,16 +55,33 @@ export class OrganizeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.carpoolsService.organizedCarpools$.pipe(
             takeUntil(this.destroy$)
         ).subscribe(carpools => {
+
+            const now = new Date().getTime();
+
             this.organizedCarpools = carpools;
-            this.dataSource.data = carpools;
+
+            this.dataSourceCurrent.data = carpools.filter(element => {
+                  const dateToCheck = new Date(element.estimatedDepartureTime).getTime();
+                  return dateToCheck > now;
+                });
+
+            this.dataSourcePast.data = carpools.filter(element => {
+                  const dateToCheck = new Date(element.estimatedDepartureTime).getTime();
+                  return dateToCheck <= now;
+                });
             this.cdRef.detectChanges();
         });
     }
 
-    ngAfterViewInit() {
+  ngOnInit(): void {
+          this.loadData();
+      }
 
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    ngAfterViewInit() {
+        this.dataSourcePast.paginator = this.paginatorPast;
+        this.dataSourcePast.sort = this.sortPast;
+        this.dataSourceCurrent.paginator = this.paginatorCurrent;
+        this.dataSourceCurrent.sort = this.sortCurrent;
     }
 
     openModalAsDelete(carpoolId: number): void {

@@ -16,17 +16,23 @@ import { DetailsModalComponent } from '../../details/details.modal.component';
     templateUrl: './participate.component.html',
     styleUrl: './participate.component.css'
 })
-export class ParticipateComponent {
+export class ParticipateComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private destroy$ = new Subject<void>();
 
     participateCarpool: CarpoolDTO[] = [];
 
-    dataSource = new MatTableDataSource<CarpoolDTO>([]);
-    displayedColumns: string[] = ['startLabel', 'endLabel', 'estimatedDepartureTime', 'estimatedArrivalTime', 'actions'];
+    dataSourceCurrent = new MatTableDataSource<CarpoolDTO>([]);
+    dataSourcePast = new MatTableDataSource<CarpoolDTO>([]);
 
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
+    displayedColumnsCurrent: string[] = ['startLabel', 'endLabel', 'estimatedDepartureTime', 'estimatedArrivalTime', 'actions'];
+    displayedColumnsPast: string[] = ['startLabel', 'endLabel', 'estimatedDepartureTime', 'estimatedArrivalTime'];
+
+    @ViewChild(MatPaginator) paginatorPast!: MatPaginator;
+    @ViewChild(MatSort) sortPast!: MatSort;
+
+    @ViewChild(MatPaginator) paginatorCurrent!: MatPaginator;
+    @ViewChild(MatSort) sortCurrent!: MatSort;
 
     constructor(
         private carpoolsService: CarpoolsService,
@@ -47,8 +53,20 @@ export class ParticipateComponent {
         this.carpoolsService.participateCarpools$.pipe(
             takeUntil(this.destroy$)
         ).subscribe(carpools => {
+
+            const now = new Date().getTime();
+
             this.participateCarpool = carpools;
-            this.dataSource.data = carpools;
+
+            this.dataSourceCurrent.data = carpools.filter(element => {
+                  const dateToCheck = new Date(element.estimatedDepartureTime).getTime();
+                  return dateToCheck > now;
+                });
+
+            this.dataSourcePast.data = carpools.filter(element => {
+                  const dateToCheck = new Date(element.estimatedDepartureTime).getTime();
+                  return dateToCheck <= now;
+                });
             this.cdRef.detectChanges();
         });
     }
@@ -68,13 +86,13 @@ export class ParticipateComponent {
                 this.carpoolsService.deleteParticipateCarpool(carpoolId).subscribe({
                     next: (response) => {
                         if (response) {
-                            console.log('Covoiturage créé avec succès:', response);
+                            console.log('Covoiturage annulé avec succés:', response);
                         } else {
-                            console.error('Échec de la création du covoiturage');
+                            console.error('Échec lors de l\'annulation du covoiturage');
                         }
                     },
                     error: (error) => {
-                        console.error('Erreur lors de la création:', error);
+                        console.error('Échec lors de l\'annulation du covoiturage:', error);
                     }
                 });
 
@@ -84,8 +102,10 @@ export class ParticipateComponent {
     }
 
     ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.dataSourcePast.paginator = this.paginatorPast;
+        this.dataSourcePast.sort = this.sortPast;
+        this.dataSourceCurrent.paginator = this.paginatorCurrent;
+        this.dataSourceCurrent.sort = this.sortCurrent;
     }
 
     ngOnDestroy(): void {

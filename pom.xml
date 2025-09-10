@@ -119,7 +119,6 @@
 
 	<build>
 		<plugins>
-			<!-- Plugin commun pour la copie des ressources Angular -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -230,11 +229,8 @@
 		<!-- Profil de développement (par défaut) -->
 		<profile>
 			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<properties>
-				<spring.profiles.active>dev</spring.profiles.active>
+				<spring.profiles.active>local</spring.profiles.active>
 			</properties>
 			<build>
 				<plugins>
@@ -269,12 +265,12 @@
 								</configuration>
 							</execution>
 							<execution>
-								<id>npm run build</id>
+								<id>npm run local</id>
 								<goals>
 									<goal>npm</goal>
 								</goals>
 								<configuration>
-									<arguments>run build</arguments>
+									<arguments>run build -- --configuration local</arguments>
 									<workingDirectory>frontend</workingDirectory>
 								</configuration>
 							</execution>

@@ -1,8 +1,6 @@
 name: CI/CD Back - Gestion des transports
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -50,6 +48,9 @@ jobs:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
             -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_app-transport-deploy
             -Dsonar.organization=diginamic-groupe1-transport
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Archivage du rapport JaCoCo

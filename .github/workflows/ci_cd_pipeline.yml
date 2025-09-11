@@ -42,12 +42,11 @@ jobs:
 
       - name: Analyse SonarCloud avec tests et JaCoCo
         env:
-          env:
-            SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-            JWT_SECRET: ${{ secrets.JWT_SECRET }}
-            JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
-            DB_USERNAME: ${{ secrets.DB_USERNAME }}
-            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
             -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_transport-back 
             -Dsonar.organization=diginamic-groupe1-transport 

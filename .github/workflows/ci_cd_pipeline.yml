@@ -64,26 +64,3 @@ jobs:
         with:
           name: app-jar
           path: target/*.jar
-
-#      - name: Vérification du Quality Gate
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-#          PR_NUMBER: ${{ github.event.pull_request.number }}
-#        run: |
-#          PROJECT_KEY="DIGINAMIC-Groupe1-Transport_transport-back"
-#
-#          sleep 60
-#
-#          for attempt in {1..3}; do
-#
-#          response=$(curl -s -u $SONAR_TOKEN: \
-#            "https://sonarcloud.io/api/qualitygates/project_status?projectKey=$PROJECT_KEY&pullRequest=$PR_NUMBER")
-#
-#          status=$(echo "$response" | jq -r '.projectStatus.status')
-#
-#          if [ "$status" != "NONE" ] && [ "$status" != "null" ] && [ -n "$status" ]; then
-#          break
-#          fi
-#
-#          sleep 30
-#          done

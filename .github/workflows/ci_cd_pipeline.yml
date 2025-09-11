@@ -45,14 +45,20 @@ jobs:
           JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
-            -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_app-transport-deploy
-            -Dsonar.organization=diginamic-groupe1-transport
-            -Dsonar.pullrequest.key=${{ github.event.number }}
-            -Dsonar.pullrequest.branch=${{ github.head_ref }}
-            -Dsonar.pullrequest.base=${{ github.base_ref }}
+        run: |
+          echo "Démarrage de Maven : clean verify + sonar"
+          mvn -B clean verify
+          echo "Vérification du rapport JaCoCo généré:"
+          ls -al target/site/jacoco || echo "Rapport JaCoCo non trouvé !"
+          echo "Exécution de l'analyse SonarCloud"
+          mvn -B -X org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_app-transport-deploy \
+            -Dsonar.organization=diginamic-groupe1-transport \
+            -Dsonar.pullrequest.key=${{ github.event.number }} \
+            -Dsonar.pullrequest.branch=${{ github.head_ref }} \
+            -Dsonar.pullrequest.base=${{ github.base_ref }} \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-
+          echo "✅ Analyse SonarCloud terminée (vérifiez dans les logs si JaCoCo a été importé)"
       - name: Archivage du rapport JaCoCo
         uses: actions/upload-artifact@v4
         with:

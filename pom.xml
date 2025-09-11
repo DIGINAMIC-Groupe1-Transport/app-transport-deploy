@@ -197,22 +197,26 @@
 				</executions>
 				<configuration>
 					<includes>
-						<include>com/diginamic/groupe1/**/*</include>
+						<include>com/diginamic/groupe1/transport/service/**/*</include>
 					</includes>
-					<excludes>
-						<exclude>**/configuration/**</exclude>
-						<exclude>**/controller/**</exclude>
-						<exclude>**/dto/**</exclude>
-						<exclude>**/entity/**</exclude>
-						<exclude>**/enums/**</exclude>
-						<exclude>**/exception/**</exclude>
-						<exclude>**/mapper/**</exclude>
-						<exclude>**/repository/**</exclude>
-						<exclude>**/security/**</exclude>
-						<exclude>**/utils/**</exclude>
-						<exclude>**/validation/**</exclude>
-						<exclude>**/*Application.*</exclude>
-					</excludes>
+<!--					<excludes>-->
+<!--						<exclude>**/configuration/**</exclude>-->
+<!--						<exclude>**/controller/**</exclude>-->
+<!--						<exclude>**/dto/**</exclude>-->
+<!--						<exclude>**/entity/**</exclude>-->
+<!--						<exclude>**/enums/**</exclude>-->
+<!--						<exclude>**/exception/**</exclude>-->
+<!--						<exclude>**/mapper/**</exclude>-->
+<!--						<exclude>**/repository/**</exclude>-->
+<!--						<exclude>**/security/**</exclude>-->
+<!--						<exclude>**/utils/**</exclude>-->
+<!--						<exclude>**/validation/**</exclude>-->
+<!--						<exclude>**/*Application.*</exclude>-->
+<!--					</excludes>-->
+					<formats>
+						<format>HTML</format>
+						<format>XML</format>
+					</formats>
 				</configuration>
 			</plugin>
 

@@ -48,8 +48,8 @@ jobs:
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
-            -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_transport-back 
-            -Dsonar.organization=diginamic-groupe1-transport 
+            -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_app-transport-deploy
+            -Dsonar.organization=diginamic-groupe1-transport
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Archivage du rapport JaCoCo

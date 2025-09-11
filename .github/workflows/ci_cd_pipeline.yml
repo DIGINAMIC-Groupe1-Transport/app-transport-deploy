@@ -10,7 +10,6 @@ jobs:
   sonarqube:
     name: Tests, JaCoCo, Build et analyse SonarCloud
     runs-on: ubuntu-latest
-
     steps:
       - name: Installer jq
         run: sudo apt-get install jq
@@ -43,12 +42,16 @@ jobs:
 
       - name: Analyse SonarCloud avec tests et JaCoCo
         env:
-          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+          env:
+            SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN }}
+            DB_USERNAME: ${{ secrets.DB_USERNAME }}
+            DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar 
             -Dsonar.projectKey=DIGINAMIC-Groupe1-Transport_transport-back 
             -Dsonar.organization=diginamic-groupe1-transport 
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-
 
       - name: Archivage du rapport JaCoCo
         uses: actions/upload-artifact@v4

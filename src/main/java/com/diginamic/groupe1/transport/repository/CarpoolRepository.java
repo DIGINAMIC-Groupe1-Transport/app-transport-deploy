@@ -17,6 +17,14 @@ import java.util.List;
 @Repository
 public interface CarpoolRepository extends JpaRepository<Carpool, Long> {
 
+    Page <Carpool> findAll (Pageable pageable);
+
+    Optional <Carpool> findById (Long id);
+
+    Page<Carpool> findByOrganizerId (Long organizerId, Pageable pageable);
+
+    Page<Carpool> findByParticipantsId (Long participantsId, Pageable pageable);
+
     @Query("""
         SELECT CASE WHEN COUNT(c) > 0 THEN true ELSE false END
         FROM Carpool c
@@ -30,13 +38,7 @@ public interface CarpoolRepository extends JpaRepository<Carpool, Long> {
 
     boolean existsByIdAndOrganizerId(Long id, Long organizerId);
 
-    Page <Carpool> findAll (Pageable pageable);
 
-    Optional <Carpool> findById (Long id);
-
-    Page<Carpool> findByOrganizerId (Long organizerId, Pageable pageable);
-
-    Page<Carpool> findByParticipantsId (Long participantsId, Pageable pageable);
 
     @Query("""
     SELECT COUNT(c) > 0 FROM Carpool c

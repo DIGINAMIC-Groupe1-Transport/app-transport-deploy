@@ -66,7 +66,7 @@ public class CarpoolController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PageableDefault(sort = {"creationTime"}, value = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(ResponseApi.success(carpoolService.findAllOrganizedCarpools(userDetails.getUserInfo(), pageable), "" +
+        return ResponseEntity.ok(ResponseApi.success(carpoolService.findAllOrganizedCarpools(userDetails.getUserInfo(), pageable),
                 "Covoiturages organisés récupérés"));
     }
 

@@ -11,15 +11,9 @@ import { ApiResponse, PaginatedResponse } from '../models/response.model';
 })
 export class CarpoolsService {
 
-  private organizedCarpoolsSubject = new BehaviorSubject<CarpoolDTO[]>([]);
-  public organizedCarpools$ = this.organizedCarpoolsSubject.asObservable();
 
   private participateCarpoolsSubject = new BehaviorSubject<CarpoolDTO[]>([]);
   public participateCarpools$ = this.participateCarpoolsSubject.asObservable();
-
-  private searchedCarpoolsSubject = new BehaviorSubject<CarpoolDTO[]>([]);
-  public searchedCarpools$ = this.searchedCarpoolsSubject.asObservable();
-
 
   constructor(private http: HttpClient) { }
 
@@ -33,6 +27,12 @@ export class CarpoolsService {
       }),
     );
   }
+  private organizedCarpoolsSubject = new BehaviorSubject<CarpoolDTO[]>([]);
+  public organizedCarpools$ = this.organizedCarpoolsSubject.asObservable();
+
+
+  private searchedCarpoolsSubject = new BehaviorSubject<CarpoolDTO[]>([]);
+  public searchedCarpools$ = this.searchedCarpoolsSubject.asObservable();
 
   loadOrganizedCarpools(): Observable<ApiResponse<PaginatedResponse<CarpoolDTO>>> {
     const url = apiUrl(ApiRoutes.carpool.organizedCarpools);

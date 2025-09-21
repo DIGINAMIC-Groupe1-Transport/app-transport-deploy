@@ -252,6 +252,7 @@ public class CarpoolService {
         userInfoRepository.save(managedUser);
 
         existingCarpool.getParticipants().add(managedUser);
+        carpoolRepository.save(existingCarpool);
 
         return modelMapper.map(existingCarpool, CarpoolDTO.class);
     }

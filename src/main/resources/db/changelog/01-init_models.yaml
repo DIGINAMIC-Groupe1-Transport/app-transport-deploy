@@ -21,90 +21,112 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
+        - sql:
+            sql: |
+              -- Table users
+              CREATE TABLE users (
+                  id BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL UNIQUE,
+                  corp_email VARCHAR(255) NOT NULL UNIQUE,
+                  phone_number VARCHAR(255) NOT NULL UNIQUE,
+                  password VARCHAR(255) NOT NULL UNIQUE,
+                  first_name VARCHAR(255) NOT NULL,
+                  last_name VARCHAR(255) NOT NULL,
+                  personal_email VARCHAR(255) UNIQUE,
+                  is_enabled BOOLEAN DEFAULT TRUE NOT NULL
+              );
+              
+              -- Table roles_users
+              CREATE TABLE roles_users (
+                  fk_user_id BIGINT NOT NULL,
+                  fk_role_id BIGINT NOT NULL,
+                  PRIMARY KEY (fk_role_id, fk_user_id),
+                  CONSTRAINT fk_user_roles_users_id FOREIGN KEY (fk_user_id) REFERENCES users(id),
+                  CONSTRAINT fk_role_roles_users_id FOREIGN KEY (fk_role_id) REFERENCES roles(id)
+              );
         #init users
-        - createTable:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-                    unique: true
-              - column:
-                  name: corp_email
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: phone_number
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: password
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: true
-              - column:
-                  name: first_name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: false
-              - column:
-                  name: last_name
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: false
-                    unique: false
-              - column:
-                  name: personal_email
-                  type: VARCHAR(255)
-                  constraints:
-                    nullable: true
-                    unique: true
-              - column:
-                  name: is_enabled
-                  type: boolean
-                  defaultValueBoolean: true
-                  constraints:
-                    nullable: false
-        #init roles_users
-        - createTable:
-            tableName: roles_users
-            columns:
-              - column:
-                  name: fk_user_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-              - column:
-                  name: fk_role_id
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-        - addForeignKeyConstraint:
-            baseTableName: roles_users
-            baseColumnNames: fk_user_id
-            referencedTableName: users
-            referencedColumnNames: id
-            constraintName: fk_user_roles_users_id
-        - addForeignKeyConstraint:
-            baseTableName: roles_users
-            baseColumnNames: fk_role_id
-            referencedTableName: roles
-            referencedColumnNames: id
-            constraintName: fk_role_roles_users_id
-        - addPrimaryKey:
-            tableName: roles_users
-            columnNames: fk_role_id, fk_user_id
-            constraintName: pk_role_user
+#        - createTable:
+#            tableName: users
+#            columns:
+#              - column:
+#                  name: id
+#                  type: BIGINT
+#                  autoIncrement: true
+#                  constraints:
+#                    primaryKey: true
+#                    nullable: false
+#                    unique: true
+#              - column:
+#                  name: corp_email
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    nullable: false
+#                    unique: true
+#              - column:
+#                  name: phone_number
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    nullable: false
+#                    unique: true
+#              - column:
+#                  name: password
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    nullable: false
+#                    unique: true
+#              - column:
+#                  name: first_name
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    nullable: false
+#                    unique: false
+#              - column:
+#                  name: last_name
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    nullable: false
+#                    unique: false
+#              - column:
+#                  name: personal_email
+#                  type: VARCHAR(255)
+#                  constraints:
+#                    nullable: true
+#                    unique: true
+#              - column:
+#                  name: is_enabled
+#                  type: boolean
+#                  defaultValueBoolean: true
+#                  constraints:
+#                    nullable: false
+#        #init roles_users
+#        - createTable:
+#            tableName: roles_users
+#            columns:
+#              - column:
+#                  name: fk_user_id
+#                  type: BIGINT
+#                  constraints:
+#                    nullable: false
+#              - column:
+#                  name: fk_role_id
+#                  type: BIGINT
+#                  constraints:
+#                    nullable: false
+#        - addForeignKeyConstraint:
+#            baseTableName: roles_users
+#            baseColumnNames: fk_user_id
+#            referencedTableName: users
+#            referencedColumnNames: id
+#            constraintName: fk_user_roles_users_id
+#        - addForeignKeyConstraint:
+#            baseTableName: roles_users
+#            baseColumnNames: fk_role_id
+#            referencedTableName: roles
+#            referencedColumnNames: id
+#            constraintName: fk_role_roles_users_id
+#        - addPrimaryKey:
+#            tableName: roles_users
+#            columnNames: fk_role_id, fk_user_id
+#            constraintName: pk_role_user
         #init messages
         - createTable:
             tableName: messages

@@ -197,22 +197,22 @@
 				</executions>
 				<configuration>
 					<includes>
-						<include>com/diginamic/groupe1/transport/service/**/*</include>
+						<include>com/diginamic/groupe1/**/*</include>
 					</includes>
-<!--					<excludes>-->
-<!--						<exclude>**/configuration/**</exclude>-->
-<!--						<exclude>**/controller/**</exclude>-->
-<!--						<exclude>**/dto/**</exclude>-->
-<!--						<exclude>**/entity/**</exclude>-->
-<!--						<exclude>**/enums/**</exclude>-->
-<!--						<exclude>**/exception/**</exclude>-->
-<!--						<exclude>**/mapper/**</exclude>-->
-<!--						<exclude>**/repository/**</exclude>-->
-<!--						<exclude>**/security/**</exclude>-->
-<!--						<exclude>**/utils/**</exclude>-->
-<!--						<exclude>**/validation/**</exclude>-->
-<!--						<exclude>**/*Application.*</exclude>-->
-<!--					</excludes>-->
+					<excludes>
+						<exclude>**/configuration/**</exclude>
+						<exclude>**/controller/**</exclude>
+						<exclude>**/dto/**</exclude>
+						<exclude>**/entity/**</exclude>
+						<exclude>**/enums/**</exclude>
+						<exclude>**/exception/**</exclude>
+						<exclude>**/mapper/**</exclude>
+						<exclude>**/repository/**</exclude>
+						<exclude>**/security/**</exclude>
+						<exclude>**/utils/**</exclude>
+						<exclude>**/validation/**</exclude>
+						<exclude>**/*Application.*</exclude>
+					</excludes>
 					<formats>
 						<format>HTML</format>
 						<format>XML</format>
@@ -230,15 +230,16 @@
 
 	<!-- PROFILS MAVEN -->
 	<profiles>
-		<!-- Profil de développement (par défaut) -->
 		<profile>
-			<id>dev</id>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<properties>
 				<spring.profiles.active>local</spring.profiles.active>
 			</properties>
 			<build>
 				<plugins>
-					<!-- Plugin frontend pour le développement -->
 					<plugin>
 						<groupId>com.github.eirslett</groupId>
 						<artifactId>frontend-maven-plugin</artifactId>
@@ -287,9 +288,6 @@
 		<!-- Profile de production -->
 		<profile>
 			<id>prod</id>
-			<properties>
-				<spring.profiles.active>prod</spring.profiles.active>
-			</properties>
 			<build>
 				<plugins>
 					<plugin>
